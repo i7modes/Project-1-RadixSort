@@ -11,29 +11,32 @@ struct Characters_nodes {
 
 struct District_nodes {
 
-       char Name[50];
-       struct town_nodes* Towns;
-       struct District_nodes* Next;
-       struct District_nodes* Previous;
+    char Name[50];
+    struct town_nodes* Towns;
+    struct District_nodes* Next;
+    struct District_nodes* Previous;
+
 };
 
 struct town_nodes {
 
-       int Population;
-       char Name[50];
-       struct town_nodes* Next;
-       struct town_nodes* Previous;
+    int Population;
+    char Name[50];
+    struct town_nodes* Next;
+    struct town_nodes* Previous;
+
+
 };
 
 struct District_nodes* MakeEmpty(struct District_nodes*);
 struct town_nodes* MakeEmptyTowns(struct town_nodes*);
 struct Characters_nodes* MakeCharacterList(char);
 
-int IsEmpty(struct District_nodes*);
-int IsEmptyTown(struct town_nodes*);
+int isEmpty(struct District_nodes*);
+int isEmptyTown(struct town_nodes*);
 
-int IsLast(struct District_nodes*, struct District_nodes*);
-int IsLastTown(struct town_nodes*, struct town_nodes*);
+int isLast(struct District_nodes*, struct District_nodes*);
+int isLastTown(struct town_nodes*, struct town_nodes*);
 
 struct District_nodes* Find(char*, struct District_nodes*);
 struct town_nodes* FindTown(char*, struct town_nodes*);
@@ -61,7 +64,7 @@ int size(struct District_nodes*);
 int sizeTown(struct town_nodes*);
 
 int maxDistrictLength(struct District_nodes*);
-struct District_nodes* makeDistrictsSameLength(struct District_nodes*, int);
+struct District_nodes* makeDistrictSameLength(struct District_nodes*, int);
 void cleanDistricts(struct District_nodes*);
 char toLowerCase(char);
 void copyDistricts(struct District_nodes*, struct District_nodes*);
@@ -85,12 +88,11 @@ int main(){
     char townName[50];
     int population;
     int lineCount = 0;
-    char *token;
+    char* token;
 
-    FILE* input = fopen("districts.txt","r");
+    FILE* input = fopen("districts.txt", "r");
 
     do{
-
         printf("Please Select one of the option you want:\n");
         printf("1. Load the input file\n");
         printf("2. Print the loaded information before sorting\n");
@@ -103,34 +105,33 @@ int main(){
         printf("9. Delete a complete district\n");
         printf("10.Calculate the population of Palestine, the max and min town population\n");
         printf("11.Print the districts and their total population\n");
-        printf("12.Change the population of a town, after prompting the user to enter the district name\n");
+        printf("12.Change the population of a town,  after prompting the user to enter the district name\n");
         printf("13.Save to output file\n");
         printf("14.Exit\n\n");
         printf("Enter the option: ");
 
-      scanf("%d", &choice);
+        scanf("%d", &choice);
 
-      switch(choice){
+        switch(choice){
 
         case 1:
 
-            while (fgets(line, sizeof(line), input)) {
+            while(fgets(line, sizeof(line), input)){
                 lineCount++;
                 token = strtok(line, "|");
 
-                if(token != NULL) {
+                if(token != NULL){
                     strcpy(districtName, token);
                     token = strtok(NULL, "|");
                 }
 
-                if(token != NULL) {
+                if(token != NULL){
                     strcpy(townName, token);
                     token = strtok(NULL, "|");
                 }
 
-                if(token != NULL) {
+                if(token != NULL){
                     population = atoi(token);
-
                 }
 
                 districtPointer = Find(districtName, unsortedDistrictList);
@@ -140,12 +141,10 @@ int main(){
                     districtPointer = Find(districtName, unsortedDistrictList);
                     InsertTownLast(townName, population, districtPointer->Towns);
 
-
                 }else{
                     InsertTownLast(townName, population, districtPointer->Towns);
 
                 }
-
             }
 
             copyDistricts(sortedDistrictList, unsortedDistrictList);
@@ -156,19 +155,19 @@ int main(){
 
         case 2:
 
-            if(IsEmpty(unsortedDistrictList)){
+            if(isEmpty(unsortedDistrictList)){
                 printf("\nYou must load the information first!\n\n");
             } else {
                 printf("\n");
                 printLoadedInformationAsInputFile(unsortedDistrictList);
+
             }
             break;
 
-
         case 3:
 
-            if(IsEmpty(sortedDistrictList)){
-                printf("\nYou must load the information first!\n\n");
+            if(isEmpty(sortedDistrictList)){
+                printf("\nYou must load the information fisrt!\n\n");
             } else {
                 districtRadixSort(sortedDistrictList);
                 printf("\nThe districts list has been sorted!\n\n");
@@ -179,25 +178,27 @@ int main(){
 
         case 4:
 
-            if(IsEmpty(sortedDistrictList)){
-                printf("\nYou must load the information first!\n\n");
+            if(isEmpty(sortedDistrictList)){
+                    printf("\nYou must load the information first!\n\n");
+
             } else {
 
-                struct District_nodes* district = sortedDistrictList->Next;
-                while (district->Next != NULL) {
-                    sortTowns(district->Towns);
-                    district = district->Next;
+                districtPointer = sortedDistrictList->Next;
+                while(districtPointer->Next != NULL){
+                    sortTowns(districtPointer->Towns);
+                    districtPointer = districtPointer->Next;
 
                 }
 
-            printf("\nThe towns lists has been sorted!\n\n");
-            isTownsSorted = 1;
+                printf("\nThe towns lists has been sorted!\n\n");
+                isTownsSorted = 1;
 
             }
             break;
 
         case 5:
-            if(IsEmpty(sortedDistrictList)){
+
+            if(isEmpty(sortedDistrictList)){
                 printf("\nYou must load the information first!\n\n");
 
             } else {
@@ -206,14 +207,15 @@ int main(){
                     printLoadedInformationAsOutputFile(sortedDistrictList);
                 } else {
                     printf("\nYou must sort the information first!\n\n");
-                }
-            }
 
+                }
+
+            }
             break;
 
         case 6:
 
-            if(IsEmpty(sortedDistrictList)){
+            if(isEmpty(sortedDistrictList)){
                 printf("\nYou must load the information first!\n\n");
 
             } else {
@@ -231,17 +233,18 @@ int main(){
                 } else {
                     printf("\nThe district name you entered is already in the list!\n\n");
 
+
                 }
             }
             break;
 
         case 7:
 
-            if(IsEmpty(sortedDistrictList)){
+            if(isEmpty(sortedDistrictList)){
                 printf("\nYou must load the information first!\n\n");
 
             } else {
-                printf("\nPlease Enter the Town's Name, population and district's Name:\n");
+                printf("\nPlease Enter the town's Name, population and district's Name:\n");
                 scanf("%s %d %s", townName, &population, districtName);
                 districtPointer = Find(districtName, sortedDistrictList);
 
@@ -256,38 +259,41 @@ int main(){
             }
             break;
 
-
         case 8:
 
-            if(IsEmpty(sortedDistrictList)){
+            if(isEmpty(sortedDistrictList)){
                 printf("\nYou must load the information first!\n\n");
 
             } else {
-                printf("\nPlease Enter the Town's Name and district's Name:\n");
+                printf("\nPlease Enter the town's Name and district's Name:\n");
                 scanf("%s %s", townName, districtName);
 
                 districtPointer = Find(districtName, sortedDistrictList);
 
                 if(districtPointer == NULL){
-                    printf("\nThe District's Name you entered not found!\n\n");
+                    printf("\nThe district's Name you entered not found!\n\n");
 
                 } else {
                     townPointer = FindTown(townName, districtPointer->Towns);
 
                     if(townPointer == NULL){
-                        printf("\nThe Town's Name you entered not found!\n\n");
+                        printf("\nThe town's Name you entered not found!\n\n");
 
                     } else {
                         DeleteTown(townPointer->Name, districtPointer->Towns);
-                        printf("\nThe Town's Name entered has been deleted!\n\n");
+                        printf("\nThe town's Name you entered has been deleted!\n\n");
+
                     }
+
                 }
+
+
             }
             break;
 
         case 9:
 
-            if(IsEmpty(sortedDistrictList)){
+            if(isEmpty(sortedDistrictList)){
                 printf("\nYou must load the information first!\n\n");
 
             } else {
@@ -297,21 +303,23 @@ int main(){
                 districtPointer = Find(districtName, sortedDistrictList);
 
                 if(districtPointer == NULL){
-                    printf("\nThe district name you entered not found!\n\n");
+                    printf("\nThe district's Name you entered not found!\n\n");
 
                 } else {
                     DeleteListTown(districtPointer->Towns);
                     Delete(districtName, sortedDistrictList);
-                    printf("\nThe district you entered has been deleted!\n\n");
+                    printf("\nThe district's Name you entered has been deleted!\n\n");
 
                 }
+
+
             }
             break;
 
         case 10:
 
-            if (IsEmpty(sortedDistrictList)) {
-                 printf("\nYou must load the information first!\n\n");
+            if(isEmpty(sortedDistrictList)){
+                printf("\nYou must load the information first!\n\n");
 
             } else {
                 int totalPopulation = 0;
@@ -322,134 +330,139 @@ int main(){
 
                 districtPointer = sortedDistrictList->Next;
 
-                while (districtPointer->Next != NULL) {
+                while(districtPointer->Next != NULL){
                     townPointer = districtPointer->Towns->Next;
 
-                    while (townPointer->Next != NULL) {
-                        totalPopulation += townPointer->Population;
+                    while(townPointer->Next != NULL){
+                        totalPopulation+= townPointer->Population;
 
-                        if (townPointer->Population > maxPopulation) {
-                           maxPopulation = townPointer->Population;
-                           strcpy(maxTown, townPointer->Name);
+                        if(townPointer->Population > maxPopulation){
+                            maxPopulation = townPointer->Population;
+                            strcpy(maxTown, townPointer->Name);
 
                         }
 
-                        if (townPointer->Population < minPopulation) {
-                           minPopulation = townPointer->Population;
-                           strcpy(minTown, townPointer->Name);
-
+                        if(townPointer->Population < minPopulation){
+                            minPopulation = townPointer->Population;
+                            strcpy(minTown, townPointer->Name);
                         }
 
                         townPointer = townPointer->Next;
                     }
-                    districtPointer = districtPointer->Next;
-                 }
 
-                 printf("\nThe total population is %d\n", totalPopulation);
-                 printf("The maximum town population is %s with %d\n", maxTown, maxPopulation);
-                 printf("The minimum town population is %s with %d\n\n", minTown, minPopulation);
+                    districtPointer = districtPointer->Next;
+                    }
+
+                printf("\nThe total population is %d\n", totalPopulation);
+                printf("The maximum town population is %s with %d\n", maxTown, maxPopulation);
+                printf("The minimum town population is %s with %d\n\n", minTown, minPopulation);
+
             }
             break;
 
         case 11:
 
-            if (IsEmpty(sortedDistrictList)) {
-                 printf("\nYou must load the information first!\n\n");
+            if(isEmpty(sortedDistrictList)){
+                printf("\nYou must load the information first!\n\n");
 
             } else {
                 printf("\nThe population for each district:\n\n");
                 districtPointer = sortedDistrictList->Next;
-                while (districtPointer->Next != NULL) {
-                     int totalPopulation = 0;
-                     townPointer = districtPointer->Towns->Next;
+                while(districtPointer->Next != NULL){
+                    int totalPopulation = 0;
+                    townPointer = districtPointer->Towns->Next;
 
-                    while (townPointer->Next != NULL) {
-                         totalPopulation += townPointer->Population;
-                         townPointer = townPointer->Next;
+                    while(townPointer->Next != NULL){
+                        totalPopulation += townPointer->Population;
+                        townPointer = townPointer->Next;
                     }
 
-               printf("%s District, Population = %d\n", districtPointer->Name, totalPopulation);
-               districtPointer = districtPointer->Next;
-
+                    printf("%s District, Population = %d\n", districtPointer->Name, totalPopulation);
+                    districtPointer = districtPointer->Next;
                 }
+
             }
             printf("\n");
             break;
 
         case 12:
 
-            if (IsEmpty(sortedDistrictList)) {
-                 printf("\nYou must load the information first!\n\n");
+            if(isEmpty(sortedDistrictList)){
+                printf("\nYou must load the information first!\n\n");
 
             } else {
                 printf("\nPlease enter the district's Name of the town:\n");
                 scanf("%s", districtName);
-                printf("\nPlease now enter the Towns's Name and the new population for it:\n");
+                printf("\nPlease now enter the town's Name and new population for it:\n");
                 scanf("%s %d", townName, &population);
 
                 districtPointer = Find(districtName, sortedDistrictList);
 
                 if(districtPointer == NULL){
-                      printf("\nThe district's name you entered not found!\n\n");
+                    printf("\nThe district's Name you entered not found!\n\n");
 
-                }else{
-                   townPointer = FindTown(townName, districtPointer->Towns);
-                   if(townPointer == NULL){
-                        printf("\nThe town's name you entered not found!\n\n");
+                } else {
+                    townPointer = FindTown(townName, districtPointer->Towns);
+                    if(townPointer == NULL){
+                        printf("\nThe town's Name you entered not found!\n\n");
 
-                    }else{
-                       townPointer->Population = population;
-                       printf("\nThe number of population has been updated\n\n");
+                    } else {
+                        townPointer->Population = population;
+                        printf("\nThe number of population has been updated\n\n");
 
                     }
 
                 }
+
             }
             break;
 
         case 13:
 
-            if (IsEmpty(sortedDistrictList)) {
-               printf("\nYou must load the information first!\n\n");
+            if(isEmpty(sortedDistrictList)){
+                printf("\nYou must load the information first!\n\n");
 
             } else {
 
-               FILE* output = fopen("sorted_districts.txt", "w");
+                FILE* output = fopen("sorted_districts.txt", "w");
 
-               districtRadixSort(sortedDistrictList);
-               struct District_nodes* district = sortedDistrictList->Next;
-                while (district->Next != NULL) {
-                    sortTowns(district->Towns);
-                    district = district->Next;
+                districtRadixSort(sortedDistrictList);
+                districtPointer = sortedDistrictList->Next;
+                while(districtPointer->Next != NULL){
+                    sortTowns(districtPointer->Towns);
+                    districtPointer = districtPointer->Next;
 
                 }
+
                 isDistrictsSorted = 1;
                 isTownsSorted = 1;
 
-               districtPointer = sortedDistrictList->Next;
-               while (districtPointer->Next != NULL) {
-                  int totalPopulation = 0;
-                  townPointer = districtPointer->Towns->Next;
+                districtPointer = sortedDistrictList->Next;
+                while(districtPointer->Next != NULL){
+                    int totalPopulation = 0;
+                    townPointer = districtPointer->Towns->Next;
 
-                  while (townPointer->Next != NULL) {
-                      totalPopulation += townPointer->Population;
-                      townPointer = townPointer->Next;
-                  }
+                    while(townPointer->Next != NULL){
+                        totalPopulation += townPointer->Population;
+                        townPointer = townPointer->Next;
 
-                  fprintf(output, "%s District, Population = %d\n", districtPointer->Name, totalPopulation);
+                    }
 
-                  townPointer = districtPointer->Towns->Next;
-                  while (townPointer->Next != NULL) {
-                      fprintf(output, "%s, %d\n", townPointer->Name, townPointer->Population);
-                      townPointer = townPointer->Next;
-                  }
+                    fprintf(output, "%s District, Population = %d\n", districtPointer->Name, totalPopulation);
 
-                  districtPointer = districtPointer->Next;
+                    townPointer = districtPointer->Towns->Next;
+                    while(townPointer->Next != NULL){
+                        fprintf(output, "%s, %d\n", townPointer->Name, townPointer->Population);
+                        townPointer = townPointer->Next;
 
-               }
+                    }
 
-              fclose(output);
-              printf("\nThe information has been saved!\n\n");
+                    districtPointer = districtPointer->Next;
+                }
+
+                fclose(output);
+                printf("\nThe information has been saved!\n\n");
+
             }
             break;
 
@@ -458,28 +471,28 @@ int main(){
             printf("\nWe are gonna miss you <3\n");
             break;
 
+
         default:
 
-            printf("\nAre you sure you entered the number between 1 - 14 :/\n\n");
+            printf("\nAre you sure that you entered the number between 1 - 14 :/\n\n");
 
-      }
+        }
 
-   }while(choice != 14);
+        } while(choice != 14);
 
     return 0;
-
 }
 
 // MakeEmpty Methods
-struct District_nodes* MakeEmpty(struct District_nodes* head) {
+struct District_nodes* MakeEmpty(struct District_nodes* head){
     struct District_nodes* tail;
-    if (head != NULL)
+    if(head != NULL)
         DeleteList(head);
 
-     head = (struct District_nodes*)malloc(sizeof(struct District_nodes));
-     tail = (struct District_nodes*)malloc(sizeof(struct District_nodes));
+    head = (struct District_nodes*)malloc(sizeof(struct District_nodes));
+    tail = (struct District_nodes*)malloc(sizeof(struct District_nodes));
 
-    if (head == NULL || tail == NULL) {
+    if(head == NULL || tail == NULL){
         printf("Out of memory!\n");
         exit(1);
     }
@@ -491,17 +504,18 @@ struct District_nodes* MakeEmpty(struct District_nodes* head) {
     tail->Previous = head;
 
     return head;
+
 }
 
-struct town_nodes* MakeEmptyTowns(struct town_nodes* head) {
+struct town_nodes* MakeEmptyTowns(struct town_nodes* head){
     struct town_nodes* tail;
-    if (head != NULL)
+    if(head != NULL)
         DeleteListTown(head);
 
-     head = (struct town_nodes*)malloc(sizeof(struct town_nodes));
-     tail = (struct town_nodes*)malloc(sizeof(struct town_nodes));
+    head = (struct town_nodes*)malloc(sizeof(struct town_nodes));
+    tail = (struct town_nodes*)malloc(sizeof(struct town_nodes));
 
-    if (head == NULL || tail == NULL) {
+    if(head == NULL || tail == NULL){
         printf("Out of memory!\n");
         exit(1);
     }
@@ -513,14 +527,15 @@ struct town_nodes* MakeEmptyTowns(struct town_nodes* head) {
     tail->Previous = head;
 
     return head;
+
 }
 
-struct Characters_nodes* MakeCharacterList(char character) {
+struct Characters_nodes* MakeCharacterList(char character){
     struct Characters_nodes* head;
 
-     head = (struct Characters_nodes*)malloc(sizeof(struct Characters_nodes));
+    head = (struct Characters_nodes*)malloc(sizeof(struct Characters_nodes));
 
-    if (head == NULL) {
+    if(head == NULL){
         printf("Out of memory!\n");
         exit(1);
     }
@@ -529,30 +544,34 @@ struct Characters_nodes* MakeCharacterList(char character) {
     head->Next = NULL;
 
     return head;
+
 }
 
 // isEmpty Methods
-int IsEmpty(struct District_nodes* L) {
+
+int isEmpty(struct District_nodes* L){
     return L->Next->Next == NULL;
 }
 
-int IsEmptyTown(struct town_nodes* L) {
+int isEmptyTown(struct town_nodes* L){
     return L->Next->Next == NULL;
 }
 
 // isLast Methods
-int IsLast(struct District_nodes* P, struct District_nodes* L) {
+
+int isLast(struct District_nodes* P, struct District_nodes* L){
     return P->Next->Next == NULL;
 }
 
-int IsLastTown(struct town_nodes* P, struct town_nodes* L) {
+int isLastTown(struct town_nodes* P, struct town_nodes* L){
     return P->Next->Next == NULL;
 }
 
 // Find Methods
+
 struct District_nodes* Find(char* districtName, struct District_nodes* L){
     struct District_nodes* P = L->Next;
-    while (P != NULL && strcasecmp(P->Name, districtName) != 0) {
+    while(P != NULL && strcasecmp(P->Name, districtName) != 0){
         P = P->Next;
     }
 
@@ -561,18 +580,18 @@ struct District_nodes* Find(char* districtName, struct District_nodes* L){
 
 struct town_nodes* FindTown(char* townName, struct town_nodes* L){
     struct town_nodes* P = L->Next;
-    while (P != NULL && strcasecmp(P->Name, townName) != 0) {
+    while(P != NULL && strcasecmp(P->Name, townName) != 0){
         P = P->Next;
     }
 
     return P;
 }
 
-// FindPrevious Methods
+//FindPrevious Methods
+
 struct District_nodes* FindPrevious(char* districtName, struct District_nodes* L){
     struct District_nodes* P = L;
-
-    while (P->Next != NULL && strcasecmp(P->Next->Name, districtName) != 0) {
+    while(P->Next != NULL && strcasecmp(P->Next->Name, districtName) != 0){
         P = P->Next;
     }
 
@@ -581,8 +600,7 @@ struct District_nodes* FindPrevious(char* districtName, struct District_nodes* L
 
 struct town_nodes* FindPreviousTown(char* townName, struct town_nodes* L){
     struct town_nodes* P = L;
-
-    while (P->Next != NULL && strcasecmp(P->Next->Name, townName) != 0) {
+    while(P->Next != NULL && strcasecmp(P->Next->Name, townName) != 0){
         P = P->Next;
     }
 
@@ -590,53 +608,53 @@ struct town_nodes* FindPreviousTown(char* townName, struct town_nodes* L){
 }
 
 // Delete Methods
+
 void Delete(char* districtName, struct District_nodes* L){
-     struct District_nodes* P;
-     struct District_nodes* temp;
+    struct District_nodes* P;
+    struct District_nodes* temp;
 
-     P = FindPrevious(districtName, L);
+    P = FindPrevious(districtName, L);
 
-
-     if(!IsLast(P, L) ){
-         temp = P->Next;
-         P->Next = temp->Next;
-         free(temp);
-     }
+    if(!isLast(P, L)){
+        temp = P->Next;
+        P->Next = temp->Next;
+        free(temp);
+    }
 }
 
 void DeleteTown(char* townName, struct town_nodes* L){
-     struct town_nodes* P;
-     struct town_nodes* temp;
+    struct town_nodes* P;
+    struct town_nodes* temp;
 
-     P = FindPreviousTown(townName, L);
+    P = FindPreviousTown(townName, L);
 
-
-     if(!IsLastTown(P, L) ){
-         temp = P->Next;
-         P->Next = temp->Next;
-         free(temp);
-     }
+    if(!isLastTown(P, L)){
+        temp = P->Next;
+        P->Next = temp->Next;
+        free(temp);
+    }
 }
 
-// InsertLast Methods
-void InsertLast(char* districtName, struct District_nodes* L) {
+//InsertLast Methods
+
+void InsertLast(char* districtName, struct District_nodes* L){
     struct District_nodes* temp;
     struct District_nodes* P = L;
+
     temp = (struct District_nodes*)malloc(sizeof(struct District_nodes));
 
-    if (temp == NULL) {
+    if(temp == NULL){
         printf("Out of memory!\n");
         exit(1);
     }
 
     strcpy(temp->Name, districtName);
 
-    struct town_nodes* townsList = MakeEmptyTowns(NULL);
-    temp->Towns = townsList;
+    struct town_nodes* townList = MakeEmptyTowns(NULL);
+    temp->Towns = townList;
 
-    while(P->Next != NULL){
+    while(P->Next != NULL)
         P = P->Next;
-    }
 
     temp->Next = P;
     temp->Previous = P->Previous;
@@ -644,14 +662,13 @@ void InsertLast(char* districtName, struct District_nodes* L) {
     P->Previous = temp;
 }
 
-void InsertTownLast(char* townName,int population, struct town_nodes* L) {
+void InsertTownLast(char* townName, int population, struct town_nodes* L){
     struct town_nodes* temp;
-    struct town_nodes* P;
-    P = L;
+    struct town_nodes* P = L;
 
     temp = (struct town_nodes*)malloc(sizeof(struct town_nodes));
 
-    if (temp == NULL) {
+    if(temp == NULL){
         printf("Out of memory!\n");
         exit(1);
     }
@@ -659,9 +676,8 @@ void InsertTownLast(char* townName,int population, struct town_nodes* L) {
     strcpy(temp->Name, townName);
     temp->Population = population;
 
-    while(P->Next != NULL){
+    while(P->Next != NULL)
         P = P->Next;
-    }
 
     temp->Next = P;
     temp->Previous = P->Previous;
@@ -669,12 +685,11 @@ void InsertTownLast(char* townName,int population, struct town_nodes* L) {
     P->Previous = temp;
 }
 
-void InsertNodeLast(struct District_nodes* district, struct District_nodes* L) {
+void InsertNodeLast(struct District_nodes* district, struct District_nodes* L){
     struct District_nodes* P = L;
 
-    while(P->Next != NULL){
+    while(P->Next != NULL)
         P = P->Next;
-    }
 
     district->Next = P;
     district->Previous = P->Previous;
@@ -682,11 +697,13 @@ void InsertNodeLast(struct District_nodes* district, struct District_nodes* L) {
     P->Previous = district;
 }
 
-void InsertDistrictLastToCharacter(struct Characters_nodes* charList, struct District_nodes* districtNode) {
+void InsertDistrictLastToCharacter(struct Characters_nodes* charList, struct District_nodes* districtNode){
     struct District_nodes* P = charList->Next;
-    struct District_nodes* newNode = (struct District_nodes*)malloc(sizeof(struct District_nodes));
+    struct District_nodes* newNode;
 
-    if (newNode == NULL) {
+    newNode = (struct District_nodes*)malloc(sizeof(struct District_nodes));
+
+    if(newNode == NULL){
         printf("Out of memory!\n");
         exit(1);
     }
@@ -695,72 +712,78 @@ void InsertDistrictLastToCharacter(struct Characters_nodes* charList, struct Dis
     newNode->Towns = districtNode->Towns;
     newNode->Next = NULL;
 
-
-    if (P == NULL) {
+    if(P == NULL){
         charList->Next = newNode;
 
     } else {
-        while (P->Next != NULL) {
+        while(P->Next != NULL)
             P = P->Next;
-        }
+
         P->Next = newNode;
     }
 }
 
+
 // PrintList Methods
-void PrintList(struct District_nodes* L) {
+
+void PrintList(struct District_nodes* L){
     struct District_nodes* P = L->Next;
-    if(IsEmpty(L)){
-      printf("Empty list\n\n");
+
+    if(isEmpty(L)){
+        printf("Empty list\n\n");
 
     } else {
-    while (P->Next != NULL) {
-        printf("%s\t", P->Name);
-        P = P->Next;
+        while(P->Next != NULL){
+            printf("%s\t", P->Name);
+            P = P->Next;
+
+        }
+        printf("\n");
     }
-    printf("\n");
-  }
 }
 
-void PrintTownList(struct town_nodes* L) {
+void PrintTownList(struct town_nodes* L){
     struct town_nodes* P = L->Next;
-    if(IsEmptyTown(L)){
-      printf("Empty list\n\n");
+
+    if(isEmptyTown(L)){
+        printf("Empty list\n\n");
 
     } else {
-    while (P->Next != NULL) {
-        printf(" %s, %d\n", P->Name, P->Population);
-        P = P->Next;
+        while(P->Next != NULL){
+            printf("%s, %d\n", P->Name, P->Population);
+            P = P->Next;
+
+        }
+        printf("\n");
     }
-    printf("\n");
-  }
 }
 
-void printLoadedInformationAsOutputFile(struct District_nodes* L) {
+void printLoadedInformationAsOutputFile(struct District_nodes* L){
     struct District_nodes* P = L->Next;
 
-    while (P->Next != NULL) {
+    while(P != NULL && P->Next != NULL){
         int totalPopulation = 0;
         struct town_nodes* townPointer = P->Towns->Next;
 
-        while (townPointer->Next != NULL) {
+        while(townPointer != NULL && townPointer->Next != NULL){
             totalPopulation += townPointer->Population;
             townPointer = townPointer->Next;
+
         }
 
-        printf("%s District, Population = %d: \n", P->Name, totalPopulation);
+        printf("%s District, Population = %d\n", P->Name, totalPopulation);
         PrintTownList(P->Towns);
         P = P->Next;
     }
 }
 
-void printLoadedInformationAsInputFile(struct District_nodes* L) {
+void printLoadedInformationAsInputFile(struct District_nodes* L){
     struct District_nodes* P = L->Next;
 
-    while (P != NULL && P->Next != NULL) {
+    while(P != NULL && P->Next != NULL){
         struct town_nodes* townPointer = P->Towns->Next;
 
-        while (townPointer != NULL && townPointer->Next != NULL) {
+        while(townPointer != NULL && townPointer->Next != NULL){
             printf("%s | %s | %d\n", P->Name, townPointer->Name, townPointer->Population);
             townPointer = townPointer->Next;
         }
@@ -770,16 +793,16 @@ void printLoadedInformationAsInputFile(struct District_nodes* L) {
 }
 
 // DeleteList Methods
-void DeleteList(struct District_nodes* L) {
+
+void DeleteList(struct District_nodes* L){
     struct District_nodes* P;
     struct District_nodes* tail;
     struct District_nodes* temp;
 
     P = L->Next;
 
-    while (P->Next != NULL)
+    while(P->Next != NULL)
         P = P->Next;
-
 
     tail = P;
     P = L->Next;
@@ -787,22 +810,21 @@ void DeleteList(struct District_nodes* L) {
     L->Next = tail;
     tail->Previous = L;
 
-
-    while (P != NULL && P->Next != NULL) {
+    while(P != NULL && P->Next != NULL){
         temp = P->Next;
         free(P);
         P = temp;
     }
 }
 
-void DeleteListTown(struct town_nodes* L) {
+void DeleteListTown(struct town_nodes* L){
     struct town_nodes* P;
     struct town_nodes* tail;
     struct town_nodes* temp;
 
     P = L->Next;
 
-    while (P->Next != NULL)
+    while(P->Next != NULL)
         P = P->Next;
 
     tail = P;
@@ -811,20 +833,20 @@ void DeleteListTown(struct town_nodes* L) {
     L->Next = tail;
     tail->Previous = L;
 
-    while (P != NULL && P->Next != NULL) {
+    while(P != NULL && P->Next != NULL){
         temp = P->Next;
         free(P);
         P = temp;
     }
 }
 
-
 // Size Methods
-int size(struct District_nodes* L) {
+
+int size(struct District_nodes* L){
     struct District_nodes* P = L->Next;
     int count = 0;
 
-    while (P != NULL && P->Next != NULL) {
+    while(P != NULL && P->Next != NULL){
         count += 1;
         P = P->Next;
     }
@@ -832,11 +854,11 @@ int size(struct District_nodes* L) {
     return count;
 }
 
-int sizeTown(struct town_nodes* L) {
+int sizeTown(struct town_nodes* L){
     struct town_nodes* P = L->Next;
     int count = 0;
 
-    while (P != NULL && P->Next != NULL) {
+    while(P != NULL && P->Next != NULL){
         count += 1;
         P = P->Next;
     }
@@ -845,14 +867,15 @@ int sizeTown(struct town_nodes* L) {
 }
 
 // RadixSort Methods
-int maxDistrictLength(struct District_nodes* L) {
-    int maxLength = 0;
-    struct District_nodes* P = L->Next;
 
-    while (P != NULL && P->Next != NULL) {
+int maxDistrictLength(struct District_nodes* L){
+    struct District_nodes* P = L->Next;
+    int maxLength = 0;
+
+    while(P != NULL && P->Next != NULL){
         int length = strlen(P->Name);
 
-        if (length > maxLength) {
+        if(length > maxLength){
             maxLength = length;
         }
 
@@ -862,43 +885,43 @@ int maxDistrictLength(struct District_nodes* L) {
     return maxLength;
 }
 
-
-struct District_nodes* makeDistrictsSameLength(struct District_nodes* L, int maxLength) {
+struct District_nodes* makeDistrictSameLength(struct District_nodes* L, int maxLength){
     struct District_nodes* P = L->Next;
 
-    while (P != NULL && P->Next != NULL) {
+    while(P != NULL && P->Next != NULL){
         int length = strlen(P->Name);
 
-        if (length < maxLength) {
-            int padding = maxLength - length;
+        if(length < maxLength) {
+            int number = maxLength - length;
 
-            for (int i = 0; i < padding; i++) {
+            for(int i = 0; i < number; i++){
                 strcat(P->Name, "$");
             }
-
         }
+
         P = P->Next;
     }
 
     return L;
 }
 
-void cleanDistricts(struct District_nodes* L) {
+void cleanDistricts(struct District_nodes* L){
     struct District_nodes* P = L->Next;
 
-    while (P != NULL) {
+    while(P != NULL){
         int length = strlen(P->Name);
         int i = length - 1;
-        while (i >= 0 && P->Name[i] == '$') {
+        while(i >= 0 && P->Name[i] == '$'){
             P->Name[i] = '\0';
             i--;
         }
+
         P = P->Next;
     }
 }
 
-char toLowerCase(char letter) {
-    if (letter >= 'A' && letter <= 'Z') {
+char toLowerCase(char letter){
+    if(letter >= 'A' && letter <= 'Z'){
         letter = (char)(letter + 32);
     }
 
@@ -906,57 +929,51 @@ char toLowerCase(char letter) {
 }
 
 void copyDistricts(struct District_nodes* Destination, struct District_nodes* Source){
+    struct District_nodes* node = Source->Next;
 
-   struct District_nodes* node = Source->Next;
+    while(node != NULL && node->Next != NULL){
+        struct District_nodes* newNode = (struct District_nodes*)malloc(sizeof(struct District_nodes));
 
-      while (node != NULL && node->Next != NULL) {
+        if(newNode == NULL){
+            printf("Out of memory!\n");
+            exit(1);
+        }
 
-            struct District_nodes* newNode = (struct District_nodes*)malloc(sizeof(struct District_nodes));
+        strcpy(newNode->Name, node->Name);
+        newNode->Towns = MakeEmptyTowns(NULL);
 
-            if (newNode == NULL) {
-                printf("Out of memory!\n");
-                break;
-            }
+        struct town_nodes* P = node->Towns->Next;
+        while(P != NULL && P->Next != NULL){
+            InsertTownLast(P->Name, P->Population, newNode->Towns);
+            P = P->Next;
 
-            strcpy(newNode->Name, node->Name);
-            newNode->Towns = MakeEmptyTowns(NULL);
+        }
 
-            struct town_nodes* P = node->Towns->Next;
-            while (P != NULL && P->Next != NULL) {
+        InsertNodeLast(newNode, Destination);
+        node = node->Next;
+    }
 
-                    InsertTownLast(P->Name, P->Population, newNode->Towns);
-                    P = P->Next;
-
-            }
-
-            InsertNodeLast(newNode, Destination);
-            node = node->Next;
-
-     }
 }
 
 void districtRadixSort(struct District_nodes* L){
-
     int maxLength = maxDistrictLength(L);
-
-    makeDistrictsSameLength(L, maxLength);
+    makeDistrictSameLength(L, maxLength);
 
     struct Characters_nodes* characters[27];
     characters[0] = MakeCharacterList('$');
 
     char digit = 'a';
-    for(int i=1; i <= 26; i++){
+    for(int i = 1; i <= 26; i++){
         characters[i] = MakeCharacterList(digit);
         digit++;
+
     }
 
     int location = 0;
     char readChar;
 
-    for (int i = maxLength - 1; i >= 0; i--) {
-
+    for(int i = maxLength - 1; i >= 0; i--){
         struct District_nodes* P = L->Next;
-
         for(int j = 1; j <= size(L); j++){
             readChar = P->Name[i];
 
@@ -969,24 +986,23 @@ void districtRadixSort(struct District_nodes* L){
             P = P->Next;
 
         }
+
         DeleteList(L);
 
-        for (int i = 0; i <= 26 ; i++) {
-        struct District_nodes* node = characters[i]->Next;
-        struct District_nodes* temp;
+        for(int i = 0; i <= 26; i++){
+            struct District_nodes* node = characters[i]->Next;
+            struct District_nodes* temp;
 
-            while (node != NULL) {
-
+            while(node != NULL){
                 struct District_nodes* newNode = (struct District_nodes*)malloc(sizeof(struct District_nodes));
 
-                if (newNode == NULL) {
-                  printf("Out of memory!\n");
-                  break;
+                if(newNode == NULL){
+                    printf("Out of memory!\n");
+                    exit(1);
                 }
 
                 strcpy(newNode->Name, node->Name);
                 newNode->Towns = node->Towns;
-
 
                 InsertNodeLast(newNode, L);
                 temp = node;
@@ -997,55 +1013,55 @@ void districtRadixSort(struct District_nodes* L){
         }
 
         for(int i = 0; i <= 26; i++){
-           characters[i]->Next = NULL;
+            characters[i]->Next = NULL;
         }
     }
 
-
     cleanDistricts(L);
 
-    for (int i = 0; i <= 26; i++) {
+    for(int i = 0; i <= 26; i++){
         free(characters[i]);
     }
-
 }
 
-// TownsSort Methods
-void swap(struct town_nodes* a, struct town_nodes* b) {
+//TownsSort Methods
+
+void Swap(struct town_nodes* A, struct town_nodes* B){
     int tempPopulation;
     char tempName[50];
 
-    strcpy(tempName, a->Name);
-    tempPopulation = a->Population;
+    strcpy(tempName, A->Name);
+    tempPopulation = A->Population;
 
-    a->Population = b->Population;
-    strcpy(a->Name, b->Name);
+    strcpy(A->Name, B->Name);
+    A->Population = B->Population;
 
-    b->Population = tempPopulation;
-    strcpy(b->Name, tempName);
+    strcpy(B->Name, tempName);
+    B->Population = tempPopulation;
+
 }
 
-void sortTowns(struct town_nodes* L) {
+void sortTowns(struct town_nodes* L){
     int size = sizeTown(L);
 
-    if (size <= 1)
+    if(size <= 1)
         return;
 
     struct town_nodes* town;
     struct town_nodes* nextTown;
 
-    for (int i = 0; i < size - 1; i++) {
+    for(int i = 0; i< size - 1; i++){
         town = L->Next;
         nextTown = town->Next;
 
-        for (int j = 0; j < size - 1; j++) {
-            if (town->Population > nextTown->Population) {
-                swap(town, nextTown);
+        for(int j = 0; j < size - 1; j++){
+            if(town->Population > nextTown->Population){
+                Swap(town, nextTown);
 
             }
+
             town = nextTown;
             nextTown = nextTown->Next;
         }
-
     }
 }
